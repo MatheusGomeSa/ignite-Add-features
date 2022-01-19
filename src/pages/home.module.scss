@@ -1,1 +1,47 @@
-// TODO
+.container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    padding: 0 2rem;
+    .post{
+        display:block;
+        width: 700px;
+        margin: 45px 0; 
+        line-height: 2rem;
+        section {
+            display: block;
+            max-width: 700px;
+        }
+        .infos{
+            p{
+                line-height:2.5rem;
+                color: var(--info);
+                >svg{
+                    margin-right: 0.25rem;
+                }
+                :nth-child(2n){
+                    margin-left: 1.25rem;
+                }
+
+            }
+        }
+
+    }
+}
+.loader{
+    color: var(--highlight);
+}
+.header{
+    height:105px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    padding: 0 2rem;
+    >a {
+        width: 700px;
+    }
+}

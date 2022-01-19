@@ -1,1 +1,43 @@
-// TODO
+
+.content {
+    margin: 0 auto;
+    padding: 0 2rem;
+    line-height: 1.575rem;
+    main { 
+        a { color: var(--highlight)}
+        display: block;
+        max-width: 700px;
+        margin: 5rem auto 0;
+        h1 {
+            font-size: 3rem;
+            margin: 1.5rem 0;
+            line-height: 3.625rem;
+        }   
+        h3 {
+            font-size: 2.25rem;
+            margin: 4rem 0 ;
+        }
+        div {
+            display: flex;
+            align-items:center;
+            justify-content:start;
+            font-size:0.875rem;
+            color: var(--info);
+            svg{
+                margin-right: 0.5rem;
+               
+                & + svg {
+                    margin-left:1.5rem;
+                }
+            }
+
+        }
+        p{
+            margin: 2rem 0;
+        }
+    }
+
+}
+.banner {
+    width: 100%;
+}

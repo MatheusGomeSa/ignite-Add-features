@@ -1,1 +1,12 @@
-// TODO
+.header{
+    height:105px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    padding: 0 2rem;
+    >a {
+        width: 700px;
+    }
+}
