@@ -10,11 +10,26 @@
         width: 700px;
         margin: 45px 0; 
         line-height: 2rem;
-        section {
+        > section {
             display: block;
             max-width: 700px;
         }
         .infos{
+            margin-bottom: 1.25rem;
+            .footerinfos {
+                display: grid;
+                grid-template-columns: 7rem 1fr;
+                line-height:2.5rem;
+                color: var(--info);
+                font-size: 0.875rem;
+                >svg{
+                    margin-right: 0.25rem;
+                }
+                :nth-child(2n){
+                    margin-left: 1.25rem;
+                }
+            }
+            
             p{
                 line-height:2.5rem;
                 color: var(--info);

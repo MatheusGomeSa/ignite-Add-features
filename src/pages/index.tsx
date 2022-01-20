@@ -79,19 +79,17 @@ export default function Home({ postsPagination }) {
   }
   return (
     <>
-      <header className={styles.header}>
-      </header>
       <div className={styles.container}>
         <main className={styles.post} >
           {resultPostPagination.results.map((result) =>
           (
             <a key={result.uid} href={`/post/${result.uid}`}>
-              <section className={styles.post}>
-                {result.data.title}
+              <section>
+                <h3>{result.data.title}</h3>
                 <div className={styles.infos}>
                   <p>{result.data.subtitle}</p>
-                  <p><FiCalendar /> <p>{format(new Date(result.first_publication_date), 'dd MMM yyyy', { locale: ptBR }).toLowerCase()}</p>
-                    <FiUser /> <p>{result.data.author}</p></p>
+                  <div className={styles.footerinfos}><div><FiCalendar /> {format(new Date(result.first_publication_date), 'dd MMM yyyy', { locale: ptBR }).toLowerCase()}</div>
+                    <div><FiUser /> {result.data.author}</div></div>
                 </div>
               </section>
             </a>)

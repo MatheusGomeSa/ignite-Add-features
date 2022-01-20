@@ -78,10 +78,10 @@ export default function Post({ post }) {
     <div className={styles.content}>
       <main >
         <h1>{Infos.data.title}</h1>
-        <div>
-          <FiCalendar /> <p>{format(new Date(Infos.first_publication_date), 'dd MMM yyyy').toLocaleLowerCase()}</p>
-          <FiUser /> <p>{Infos.data.author}</p>
-          <FiClock /> <p>{Timer} min</p>
+        <div className={styles.footerinfos}>
+          <div><FiCalendar /> <p>{format(new Date(Infos.first_publication_date), 'dd MMM yyyy').toLocaleLowerCase()}</p></div>
+          <div><FiUser /> <p>{Infos.data.author}</p></div>
+          <div><FiClock /> <p>{Timer} min</p></div>
         </div>
         {Infos.data.content.map(content => {
           return (<>

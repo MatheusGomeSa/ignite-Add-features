@@ -15,7 +15,12 @@
         }   
         h3 {
             font-size: 2.25rem;
+            line-height:2rem;
             margin: 4rem 0 ;
+        }
+        .footerinfos{
+            display: grid;
+            grid-template-columns: 7rem 7rem 7rem;
         }
         div {
             display: flex;
