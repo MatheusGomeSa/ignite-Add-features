@@ -11,16 +11,26 @@ import styles from './post.module.scss';
 import { useEffect, useState } from 'react';
 import { RichText, RichTextBlock } from 'prismic-reactjs';
 import { useRouter } from 'next/router'
+import { Comments } from '../../components/Comments';
 
+interface NavagationPost {
+  uid?: string;
+  first_publication_date: string | null;
+  data: {
+    title: string;
+    subtitle: string;
+    author: string;
+  };
+}
 
 interface Post {
   first_publication_date: string | null;
+  last_publication_date: string | null;
   data: {
     title: string;
     banner: {
       url: string;
     };
-    author: string;
     content: {
       heading: string;
       body: {
@@ -31,10 +41,12 @@ interface Post {
 }
 
 interface PostProps {
+  prevPage: NavagationPost | null;
   post: Post;
+  nextPage: NavagationPost | null;
 }
 
-export default function Post({ post }) {
+export default function Post({ prevPage, post, nextPage }) {
   const router = useRouter();
 
   if (router.isFallback) {
@@ -45,6 +57,7 @@ export default function Post({ post }) {
 
   const [Infos, SetInfos] = useState({
     first_publication_date: post.first_publication_date,
+    last_publication_date: post.last_publication_date,
     data: {
       title: typeof post.data.title == 'string' ? post.data.title : RichText.asText(post.data.title),
       banner: {
@@ -82,6 +95,7 @@ export default function Post({ post }) {
           <div><FiCalendar /> <p>{format(new Date(Infos.first_publication_date), 'dd MMM yyyy').toLocaleLowerCase()}</p></div>
           <div><FiUser /> <p>{Infos.data.author}</p></div>
           <div><FiClock /> <p>{Timer} min</p></div>
+          <em>*editado em {format(new Date(Infos.last_publication_date), 'dd MMM yyyy', { locale: ptBR })}, às {format(new Date(Infos.last_publication_date), 'HH:mm', { locale: ptBR })}</em>
         </div>
         {Infos.data.content.map(content => {
           return (<>
@@ -91,6 +105,23 @@ export default function Post({ post }) {
           )
         })}
       </main>
+      <footer>
+        <div>
+          <div>
+            {prevPage ?
+              <>
+                <p>{RichText.asText(prevPage.data.title)}</p>
+                <a href={`/post/${prevPage.uid}`}>Post anterior</a></> : ""}
+          </div>
+          <div>
+            {nextPage ?
+              <>
+                <p>{RichText.asText(nextPage.data.title)}</p>
+                <a href={`/post/${nextPage.uid}`}>Próximo post</a></> : ""}
+          </div>
+        </div>
+        <Comments />
+      </footer>
     </div>
   </>
   )
@@ -100,7 +131,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
   const prismic = getPrismicClient();
   const posts = await prismic.query([Prismic.predicates.at('document.type', 'posts')],
     {
-      fetch: ['posts.slug', 'posts.subtitle', 'posts.author', 'posts.banner', 'posts.content'],
+      fetch: ['posts.slug', 'posts.title', 'posts.subtitle', 'posts.author', 'posts.banner', 'posts.content'],
       pageSize: 3,
     })
 
@@ -122,13 +153,39 @@ export const getStaticPaths: GetStaticPaths = async () => {
 export const getStaticProps: GetStaticProps = async ({ params }) => {
   const { slug } = params
   const prismic = getPrismicClient();
-  let response = await prismic.getByUID('posts', String(slug), {});
 
+  const postsResponse = await prismic.query([
+    Prismic.predicates.at('document.type', 'posts')
+  ], {
+    fetch: ['posts.uid', 'posts.title', 'posts.subtitle', 'posts.author'],
+    pageSize: 10,
+
+  })
+
+  postsResponse.results.sort(function (a, b) {
+    let x = new Date(a.first_publication_date).getTime(),
+      y = new Date(b.first_publication_date).getTime();
+    return x - y;
+  })
+
+
+  let ObjectProps = { PrevPage: {}, Post: {}, NextPage: {}, }
+
+  for (let i = 0; i < postsResponse.results.length; i++) {
+    if (postsResponse.results[i].uid == String(slug)) {
+      ObjectProps.PrevPage = postsResponse.results[i - 1];
+      ObjectProps.NextPage = postsResponse.results[i + 1];
+    }
+  }
+  // console.log(JSON.stringify(ObjectProps, null, 2));
+
+  let response = await prismic.getByUID('posts', String(slug), {});
 
 
   let post = {
     uid: response.uid,
     first_publication_date: response.first_publication_date,
+    last_publication_date: response.last_publication_date,
     data: {
       title: response.data.title,
       subtitle: response.data.subtitle,
@@ -144,10 +201,14 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
       })
     }
   }
-
+  ObjectProps.Post = post;
   // console.log(JSON.stringify(post))
   return {
-    props: { post }
+    props: {
+      nextPage: ObjectProps.NextPage || null,
+      post: post,
+      prevPage: ObjectProps.PrevPage || null
+    }
 
 
 

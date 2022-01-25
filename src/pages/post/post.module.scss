@@ -21,6 +21,10 @@
         .footerinfos{
             display: grid;
             grid-template-columns: 7rem 7rem 7rem;
+            em{
+                grid-column-start: 1;
+                grid-column-end: 3;
+            }
         }
         div {
             display: flex;
@@ -40,6 +44,20 @@
         p{
             margin: 2rem 0;
         }
+    }
+    footer { 
+            a { color: var(--highlight)}
+            display: block;
+            max-width: 700px;
+            margin: 5rem auto 0;
+            >div { 
+                display: flex;
+                justify-content: space-between;
+                > div { 
+                    align-content: flex-start;
+                }
+                & + div { align-content: flex-end; }    
+            }
     }
 
 }
