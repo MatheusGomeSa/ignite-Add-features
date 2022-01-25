@@ -22,7 +22,9 @@
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
-    "**/*.spec.tsx"
+    "**/*.spec.tsx",
+    "prismicConfiguration.js",
+    "src/services/queries.js"
   ],
   "exclude": [
     "node_modules"

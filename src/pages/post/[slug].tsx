@@ -12,6 +12,7 @@ import { useEffect, useState } from 'react';
 import { RichText, RichTextBlock } from 'prismic-reactjs';
 import { useRouter } from 'next/router'
 import { Comments } from '../../components/Comments';
+import Link from 'next/link';
 
 interface NavagationPost {
   uid?: string;
@@ -46,7 +47,7 @@ interface PostProps {
   nextPage: NavagationPost | null;
 }
 
-export default function Post({ prevPage, post, nextPage }) {
+export default function Post({ prevPage, post, nextPage, preview }) {
   const router = useRouter();
 
   if (router.isFallback) {
@@ -72,7 +73,6 @@ export default function Post({ prevPage, post, nextPage }) {
       })
     }
   });
-  //console.log(JSON.stringify(Infos, null, 2))
   const [Timer, SetTimer] = useState(0)
   useEffect(() => {
     let words = [];
@@ -106,7 +106,7 @@ export default function Post({ prevPage, post, nextPage }) {
         })}
       </main>
       <footer>
-        <div>
+        <div className={styles.NavegationPages}>
           <div>
             {prevPage ?
               <>
@@ -121,6 +121,14 @@ export default function Post({ prevPage, post, nextPage }) {
           </div>
         </div>
         <Comments />
+        {preview && (
+          <aside>
+            <Link href="/api/exit-preview">
+              <a>Sair do modo Preview</a>
+            </Link>
+          </aside>
+        )}
+
       </footer>
     </div>
   </>
@@ -150,7 +158,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
 
 };
 
-export const getStaticProps: GetStaticProps = async ({ params }) => {
+export const getStaticProps: GetStaticProps = async ({ params, preview = false, previewData }) => {
   const { slug } = params
   const prismic = getPrismicClient();
 
@@ -177,9 +185,8 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
       ObjectProps.NextPage = postsResponse.results[i + 1];
     }
   }
-  // console.log(JSON.stringify(ObjectProps, null, 2));
 
-  let response = await prismic.getByUID('posts', String(slug), {});
+  let response = await prismic.getByUID('posts', String(slug), { ref: previewData?.ref ?? null });
 
 
   let post = {
@@ -202,41 +209,13 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     }
   }
   ObjectProps.Post = post;
-  // console.log(JSON.stringify(post))
   return {
     props: {
+      preview,
       nextPage: ObjectProps.NextPage || null,
       post: post,
       prevPage: ObjectProps.PrevPage || null
     }
-
-
-
-    /* let PostPageInformations = {
-      first_publication_date: response.first_publication_date,
-      data: {
-        title: RichText.asText(response.data.title),
-        banner: {
-          url: response.data.banner.url
-        },
-        author: RichText.asText(response.data.author),
-        content: response.data.content.map((content) => {
-          return {
-            heading: content.heading,
-            body: content.body.map((body) => {
-              return { text: body.text }
-            }
-  
-            )
-          }
-        })
-      }
-    }
-    return {
-      props: {
-        PostPageInformations
-      }
-   */
     ,
     redirect: 60 * 60 // 1 hora
   }

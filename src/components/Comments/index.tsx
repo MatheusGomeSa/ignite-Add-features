@@ -1,24 +1,23 @@
-export function Comments() {
+import React, { Component } from 'react';
 
-    return (
-        <section
-            style={{ width: '100%' }}
-            ref={
-                element => {
-                    if (!element) {
-                        return
-                    }
+export class Comments extends Component {
 
-                    const scriptElement = document.createElement('script')
-                    scriptElement.setAttribute('src', 'https://utteranc.es/client.js')
-                    scriptElement.setAttribute('repo', 'MatheusGomeSa/ignite-Add-features')
-                    scriptElement.setAttribute('issue-term', 'pathname')
-                    scriptElement.setAttribute('theme', 'photon-dark')
-                    scriptElement.setAttribute('crossorigin', 'anonymous')
-                    scriptElement.setAttribute('async', 'true')
-                    element.replaceChildren(scriptElement)
-                }
-            }
-        />
-    )
+    componentDidMount() {
+        let scriptEl = document.createElement('script');
+        let anchor = document.getElementById("inject-comments-for-uterances");
+        scriptEl.setAttribute('src', 'https://utteranc.es/client.js')
+        scriptEl.setAttribute('crossoring', 'anonymous')
+        scriptEl.setAttribute("async", "")
+        scriptEl.setAttribute("repo", "MatheusGomeSa/ignite-Add-features")
+        scriptEl.setAttribute("issue-term", "url")
+        scriptEl.setAttribute("theme", "dark-blue")
+        anchor.appendChild(scriptEl);
+    }
+    render() {
+        return (
+            <div id="inject-comments-for-uterances"></div>
+        );
+    }
+
+
 }
